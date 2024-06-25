@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Reset and general styling */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9; /* Light gray background color */
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header styling */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin: 0;
+        }
+
+        .nav {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: white;
+            font-size: 1.2em;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #27ae60;
+        }
+
+        .nav a i {
+            margin-right: 5px;
+        }
+
+        /* Game list styling */
+        .game-list {
+            list-style: none;
+            padding: 100;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .game-item {
+            width: 300px; /* Fixed width for each game item */
+            height: 300px; /* Set height to match width for square layout */
+            margin: 20px; /* Margin to center items */
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .game-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            height: 100%;
+        }
+
+        .game-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s ease-out;
+        }
+
+        .game-details {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            text-align: center;
+            border-radius: 0 0 8px 8px;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s;
+        }
+
+        .game-details h3 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: white;
+        }
+
+        .game-item:hover .game-details {
+            opacity: 1; /* Show on hover */
+        }
+
+        /* Footer styling */
+        .footer {
+            background-color: #e84393;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-icons {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+
+        .footer-icons a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-icons a:hover {
+            color: #27ae60;
+        }
+
+        .copyright {
+            margin-top: 20px;
+            font-size: 0.8em;
+        }
+
+        /* About, Help, and Contact sections */
+        .section {
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        #help {
+            background-color: #f0f0f0;
+        }
+
+        #about {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Game Hub</h1>
+            <nav class="nav">
+                <a href="#home"><i class="fas fa-home"></i> Home</a>
+                <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+                <a href="#help"><i class="fas fa-question-circle"></i> Help</a>
+                <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container main-content" id="home">
+        <h2>Welcome to Game Hub</h2>
+        <p>Your one-stop destination for classic and exciting games. Explore our collection and have fun!</p>
+        <ul class="game-list">
+            <li class="game-item">
+                <a href="1.html" class="game-link">
+                    <img src="https://tse2.mm.bing.net/th?id=OIP.lsa1h1g2VBBdCPZbi9kcXwAAAA&pid=Api&P=0&h=180" alt="Snake Game" class="game-image">
+                    <div class="game-details">
+                        <h3>Snake</h3>
+                    </div>
+                </a>
+            </li>
+            <li class="game-item">
+                <a href="2.html" class="game-link">
+                    <img src="https://tse3.mm.bing.net/th?id=OIP.MkTUpAiBdhxkP7r2GiGEogHaEK&pid=Api&P=0&h=180" alt="Pong Game" class="game-image">
+                    <div class="game-details">
+                        <h3>Pong</h3>
+                    </div>
+                </a>
+            </li>
+            <li class="game-item">
+                <a href="3.html" class="game-link">
+                    <img src="https://tse1.mm.bing.net/th?id=OIP.IK1AvnxCTWUS5NLmoM-90AHaEK&pid=Api&P=0&h=180" alt="Memory Matching Game" class="game-image">
+                    <div class="game-details">
+                        <h3>Memory Matching</h3>
+                    </div>
+                </a>
+            </li>
+            <li class="game-item">
+                <a href="4.html" class="game-link">
+                    <img src="https://tse1.mm.bing.net/th?id=OIP.bA3s18nYBm1awWdVWEckVwHaEQ&pid=Api&P=0&h=180" alt="Number Guessing Game" class="game-image">
+                    <div class="game-details">
+                        <h3>Number Guessing</h3>
+                    </div>
+                </a>
+            </li>
+            <li class="game-item">
+                <a href="5.html" class="game-link">
+                    <img src="https://tse2.mm.bing.net/th?id=OIP.joiCtjgS6JI2Pb_22lDnVgHaEK&pid=Api&P=0&h=180" alt="Tic Tac Toe Game" class="game-image">
+                    <div class="game-details">
+                        <h3>Tic Tac Toe</h3>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container section" id="about">
+        <h2>About Us</h2>
+        <p>Welcome to Game Hub, your ultimate gaming destination. We aim to provide a wide range of enjoyable games for all ages. Whether you're here to revisit your favorite games or discover new favorites, Game Hub is the place for you. Join us in our journey to create the ultimate gaming experience!</p>
+    </div>
+
+    <div class="container section" id="help">
+        <h2>Help</h2>
+        <p>Need assistance? We're here to help! Check out our frequently asked questions below:</p>
+        <p><strong>Q: How do I start a game?</strong></p>
+        <p>A: Simply click on the game you want to play from the home page, and you'll be redirected to the game screen.</p>
+        <p><strong>Q: Are the games free to play?</strong></p>
+        <p>A: Yes, all the games on Game Hub are free to play. Just click and enjoy!</p>
+        <p><strong>Q: What if I encounter a problem with a game?</strong></p>
+        <p>A: If you experience any issues, please contact us through the contact form below. Provide as much detail as possible so we can assist you quickly.</p>
+    </div>
+
+    <div class="container section" id="contact">
+        <h2>Contact Us</h2>
+        <p>We'd love to hear from you! Whether you have a question, feedback, or just want to say hello, feel free to reach out.</p>
+        <p>Email: gokulv1905cit@gmail.com</p>
+        <p>Instagram: gokul_19_05</p>
+        <p>LinkedIn: GOKUL V</p>
+        <p>Follow us on social media for the latest updates and news:</p>
+        <div class="footer-icons">
+            <a href="https://www.facebook.com/profile.php?id=100093953464775&mibextid=kFxxJD"><i class="fab fa-facebook-f"></i></a>
+            <a href="mailto:gokulv1905cit@gmail.com"><i class="fas fa-envelope"></i></a>
+            <a href="https://www.instagram.com/gokul_19_05?igsh=MWZhN2hyeGdoZzc3bw=="><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/in/gokul-v-a79b362a3?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/GOKUL0019"><i class="fab fa-github"></i></a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-icons">
+                <a href="https://www.facebook.com/profile.php?id=100093953464775&mibextid=kFxxJD"><i class="fab fa-facebook-f"></i></a>
+                <a href="mailto:gokulv1905cit@gmail.com"><i class="fas fa-envelope"></i></a>
+                <a href="https://www.instagram.com/gokul_19_05?igsh=MWZhN2hyeGdoZzc3bw=="><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/gokul-v-a79b362a3?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/GOKUL0019"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="copyright">&copy; 2024 Game Hub. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

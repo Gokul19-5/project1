@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h1 {
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            border: 2px solid #333;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        #score {
+            color: #fff;
+            font-size: 1.2em;
+            margin-top: 10px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            animation: showModal 0.5s ease-out;
+        }
+
+        @keyframes showModal {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal h2 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pong Game</h1>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <div id="score">Score: Player 0 - Computer 0</div>
+    <div id="winnerModal" class="modal">
+        <div class="modal-content">
+            <h2 id="winnerMessage"></h2>
+            <button id="restartButton" class="button">Restart Game</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const paddleWidth = 10;
+        const paddleHeight = 100;
+        const ballRadius = 10;
+        const winningScore = 5;
+
+        let playerY = (canvas.height - paddleHeight) / 2;
+        let computerY = (canvas.height - paddleHeight) / 2;
+        let ballX = canvas.width / 2;
+        let ballY = canvas.height / 2;
+        let ballSpeedX = 4;
+        let ballSpeedY = 4;
+
+        let playerScore = 0;
+        let computerScore = 0;
+
+        const playerSpeed = 6;
+
+        function gameLoop() {
+            if (playerScore >= winningScore || computerScore >= winningScore) {
+                const winnerMessage = playerScore >= winningScore ? 'Player Wins!' : 'Computer Wins!';
+                document.getElementById('winnerMessage').textContent = winnerMessage;
+                document.getElementById('winnerModal').style.display = 'flex';
+                return;
+            }
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function update() {
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+
+            // Ball collision with top and bottom walls
+            if (ballY - ballRadius < 0 || ballY + ballRadius > canvas.height) {
+                ballSpeedY = -ballSpeedY;
+            }
+
+            // Ball collision with player paddle
+            if (ballX - ballRadius < paddleWidth) {
+                if (ballY > playerY && ballY < playerY + paddleHeight) {
+                    ballSpeedX = -ballSpeedX;
+                    let deltaY = ballY - (playerY + paddleHeight / 2);
+                    ballSpeedY = deltaY * 0.3; // Add some randomness to the ball's speed
+                } else {
+                    computerScore++;
+                    resetBall();
+                }
+            }
+
+            // Ball collision with computer paddle
+            if (ballX + ballRadius > canvas.width - paddleWidth) {
+                if (ballY > computerY && ballY < computerY + paddleHeight) {
+                    ballSpeedX = -ballSpeedX;
+                    let deltaY = ballY - (computerY + paddleHeight / 2);
+                    ballSpeedY = deltaY * 0.3; // Add some randomness to the ball's speed
+                } else {
+                    playerScore++;
+                    resetBall();
+                }
+            }
+
+            // Move computer paddle
+            if (computerY + paddleHeight / 2 < ballY) {
+                computerY += playerSpeed;
+            } else {
+                computerY -= playerSpeed;
+            }
+
+            // Ensure paddles stay within canvas bounds
+            playerY = Math.max(Math.min(playerY, canvas.height - paddleHeight), 0);
+            computerY = Math.max(Math.min(computerY, canvas.height - paddleHeight), 0);
+
+            document.getElementById('score').textContent = `Score: Player ${playerScore} - Computer ${computerScore}`;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw player paddle
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, playerY, paddleWidth, paddleHeight);
+
+            // Draw computer paddle
+            ctx.fillRect(canvas.width - paddleWidth, computerY, paddleWidth, paddleHeight);
+
+            // Draw ball
+            ctx.beginPath();
+            ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+            ctx.fillStyle = "#000";
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function resetBall() {
+            ballX = canvas.width / 2;
+            ballY = canvas.height / 2;
+            ballSpeedX = (Math.random() > 0.5 ? 1 : -1) * 4; // Randomize initial direction
+            ballSpeedY = (Math.random() * 2 - 1) * 4; // Randomize initial vertical speed
+        }
+
+        function resetGame() {
+            playerScore = 0;
+            computerScore = 0;
+            document.getElementById('winnerModal').style.display = 'none';
+            document.getElementById('score').textContent = `Score: Player ${playerScore} - Computer ${computerScore}`;
+            resetBall();
+            gameLoop();
+        }
+
+        document.getElementById("restartButton").addEventListener("click", () => {
+            resetGame();
+        });
+
+        document.addEventListener("keydown", (event) => {
+            switch (event.key) {
+                case "ArrowUp":
+                    playerY -= playerSpeed;
+                    break;
+                case "ArrowDown":
+                    playerY += playerSpeed;
+                    break;
+            }
+        });
+
+        resetBall();
+        gameLoop();
+    </script>
+</body>
+</html>

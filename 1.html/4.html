@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #2c3e50, #34495e); /* Dual-color background */
+            font-family: Arial, sans-serif;
+            color: rgb(219, 37, 37);
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 400px;
+            animation: slideIn 0.6s ease-out; /* Entrance animation */
+        }
+
+        h1 {
+            color: #064c7a; /* Blue */
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            letter-spacing: 2px;
+        }
+
+        input[type="number"] {
+            padding: 12px;
+            font-size: 1.2em;
+            text-align: center;
+            width: 100%;
+            border: 2px solid #0d66a2; /* Blue border */
+            border-radius: 5px;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 24px;
+            margin-top: 15px;
+            font-size: 1.2em;
+            cursor: pointer;
+            background-color: #3498db; /* Blue button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #1daed2; /* Darker blue on hover */
+            transform: scale(1.05); /* Scale up on hover */
+        }
+
+        #result {
+            margin-top: 30px;
+            font-size: 1.8em;
+            color: #fff; /* White */
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #ddd; /* Light gray */
+        }
+
+        #win-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            font-size: 2.5em;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white background */
+            color: #27ae60; /* Green text color */
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(39, 174, 96, 0.8); /* Green shadow */
+            animation: fadeIn 1s forwards; /* Fade-in animation */
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Number Guessing Game</h1>
+        <p>Guess the number between 1 and 100:</p>
+        <input type="number" id="guess" min="1" max="100" required>
+        <button id="submit">Submit Guess</button>
+        <div id="result"></div>
+        <div class="message" id="message"></div>
+    </div>
+
+    <div id="win-message">Congratulations!<br>You guessed it!</div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const minNumber = 1;
+            const maxNumber = 100;
+            let targetNumber = generateRandomNumber(minNumber, maxNumber);
+            let attempts = 0;
+
+            const guessInput = document.getElementById("guess");
+            const submitButton = document.getElementById("submit");
+            const resultDiv = document.getElementById("result");
+            const messageDiv = document.getElementById("message");
+            const winMessage = document.getElementById("win-message");
+
+            submitButton.addEventListener("click", () => {
+                const guess = parseInt(guessInput.value);
+
+                if (isNaN(guess) || guess < minNumber || guess > maxNumber) {
+                    showMessage("Please enter a valid number between 1 and 100.", "red");
+                    return;
+                }
+
+                attempts++;
+                if (guess === targetNumber) {
+                    showResult(`Congratulations! You guessed the number ${targetNumber} correctly in ${attempts} attempts.`, "green");
+                    submitButton.disabled = true;
+                    showWinMessage();
+                } else if (guess < targetNumber) {
+                    showMessage(`Try a higher number. Attempts: ${attempts}`, "blue");
+                } else {
+                    showMessage(`Try a lower number. Attempts: ${attempts}`, "blue");
+                }
+            });
+
+            function generateRandomNumber(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            function showResult(message, color) {
+                resultDiv.textContent = message;
+                resultDiv.style.color = color;
+            }
+
+            function showMessage(message, color) {
+                messageDiv.textContent = message;
+                messageDiv.style.color = color;
+            }
+
+            function showWinMessage() {
+                winMessage.style.display = "block";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #2c3e50;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .game {
+            background-color: #34495e;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            max-width: 400px;
+            margin: 20px;
+            position: relative; /* Ensure relative positioning for absolute elements */
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 2px;
+            background-color: #2980b9;
+            padding: 2px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            cursor: pointer;
+            background-color: #2c3e50;
+            transition: background-color 0.3s;
+        }
+
+        .cell:hover {
+            background-color: #34495e;
+        }
+
+        #message {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .selection {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .selection button {
+            font-size: 2em;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 0 10px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .selection button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        #win-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #34495e;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            z-index: 1000; /* Ensure it's above other elements */
+            animation: pop-up 0.5s forwards;
+        }
+
+        @keyframes pop-up {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tic-Tac-Toe</h1>
+        <div class="game">
+            <div id="message">Choose X or O</div>
+            <div class="selection">
+                <button class="btn" onclick="startGame('X')">X</button>
+                <button class="btn" onclick="startGame('O')">O</button>
+            </div>
+            <div class="board" id="board">
+                <!-- Game board will be dynamically generated here -->
+            </div>
+            <div class="btn-group">
+                <button id="restartBtn" class="btn" onclick="restartGame()" style="display: none;">Restart Game</button>
+            </div>
+            <div id="win-message">Congratulations!<br>You've won!</div>
+        </div>
+    </div>
+
+    <script>
+        let currentPlayer = "";
+        let gameActive = false;
+        let moves = 0;
+        const cells = [];
+        const winMessage = document.getElementById("win-message");
+
+        function startGame(player) {
+            currentPlayer = player;
+            gameActive = true;
+            moves = 0;
+            document.getElementById("message").style.display = "none";
+            document.querySelector(".selection").style.display = "none";
+            document.getElementById("restartBtn").style.display = "none";
+            createBoard();
+        }
+
+        function createBoard() {
+            const board = document.getElementById("board");
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                cell.setAttribute("onclick", `handleCellClick(${i})`);
+                board.appendChild(cell);
+                cells.push(cell);
+            }
+        }
+
+        function handleCellClick(index) {
+            const cell = cells[index];
+            if (!gameActive || cell.textContent !== "") return;
+            cell.textContent = currentPlayer;
+            moves++;
+            if (checkWin(currentPlayer)) {
+                endGame(`${currentPlayer} wins!`);
+            } else if (moves === 9) {
+                endGame("It's a draw!");
+            } else {
+                currentPlayer = currentPlayer === "X" ? "O" : "X";
+                if (currentPlayer === "O") {
+                    setTimeout(computerMove, 500); // Delay for computer move
+                }
+            }
+        }
+
+        function computerMove() {
+            const emptyCells = cells.filter(cell => cell.textContent === "");
+            const randomIndex = Math.floor(Math.random() * emptyCells.length);
+            const cell = emptyCells[randomIndex];
+            cell.textContent = "O";
+            moves++;
+            if (checkWin("O")) {
+                endGame("Computer wins!");
+            } else if (moves === 9) {
+                endGame("It's a draw!");
+            } else {
+                currentPlayer = "X";
+            }
+        }
+
+        function checkWin(player) {
+            const winningConditions = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6]             // Diagonals
+            ];
+            return winningConditions.some(condition => {
+                const [a, b, c] = condition;
+                return cells[a].textContent === player &&
+                       cells[b].textContent === player &&
+                       cells[c].textContent === player;
+            });
+        }
+
+        function endGame(messageText) {
+            gameActive = false;
+            winMessage.textContent = messageText;
+            winMessage.style.display = "block";
+            document.getElementById("restartBtn").style.display = "block";
+        }
+
+        function restartGame() {
+            cells.forEach(cell => {
+                cell.textContent = "";
+            });
+            currentPlayer = "";
+            gameActive = false;
+            moves = 0;
+            document.getElementById("message").style.display = "block";
+            document.querySelector(".selection").style.display = "flex";
+            winMessage.style.display = "none";
+            document.getElementById("restartBtn").style.display = "none";
+        }
+    </script>
+</body>
+</html>
